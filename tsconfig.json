@@ -1,0 +1,20 @@
+{
+    "extends": "./.svelte-kit/tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+    }
+    // Path aliases are handled by `svelte.config.js` (kit.alias) as recommended by SvelteKit.
+    // The default '$lib' alias is handled automatically by the SvelteKit framework.
+    //
+    // To make changes to top-level options such as `include` and `exclude`, 
+    // we recommend extending the generated config.
+}

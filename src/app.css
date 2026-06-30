@@ -1,0 +1,46 @@
+/* 
+  src/app.css: Global styles for the application.
+  This file is imported in the root layout.
+*/
+
+:root {
+	--bloom-color: rgba(200, 225, 255, 0.7); /* A cool, sci-fi blue */
+}
+
+/* Apply bloom to Header and Footer elements */
+.bloom-header a,
+.bloom-header h1,
+.bloom-footer a,
+.bloom-footer h1 {
+	color: var(--bloom-color);
+	transition: filter 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+	/* Layered drop-shadow for a softer, more realistic bloom */
+	filter: drop-shadow(0 0 2px var(--bloom-color)) drop-shadow(0 0 8px var(--bloom-color))
+		drop-shadow(0 0 15px rgba(0, 128, 255, 0.3));
+	/* ✅ ADD: Add a subtle text-shadow to make the letters themselves glow. */
+	text-shadow: 0 0 5px rgba(200, 225, 255, 0.5);
+}
+
+/* Intensify bloom on hover for interactive feedback */
+.bloom-header a:hover,
+.bloom-footer a:hover {
+	/* ✅ FIX: Apply a continuous pulsing animation on hover instead of a static change. */
+	animation: pulse-glow 2s infinite ease-in-out;
+}
+
+/* Ensure SVGs in the footer also get the bloom effect */
+.bloom-footer svg { fill: currentColor; }
+
+/* ✅ ADD: Keyframe animation for the pulsing glow effect. */
+@keyframes pulse-glow {
+	0%, 100% {
+		transform: scale(1.05);
+		filter: drop-shadow(0 0 6px var(--bloom-color)) drop-shadow(0 0 16px var(--bloom-color)) drop-shadow(0 0 30px rgba(0, 128, 255, 0.5));
+		text-shadow: 0 0 8px rgba(200, 225, 255, 0.8);
+	}
+	50% {
+		transform: scale(1.1);
+		filter: drop-shadow(0 0 10px var(--bloom-color)) drop-shadow(0 0 25px var(--bloom-color)) drop-shadow(0 0 50px rgba(0, 128, 255, 0.7));
+		text-shadow: 0 0 14px rgba(200, 225, 255, 1);
+	}
+}
