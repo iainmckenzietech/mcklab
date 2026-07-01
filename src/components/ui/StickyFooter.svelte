@@ -360,14 +360,14 @@
     @media screen and (max-width: 768px) {
         .bloom-footer { flex-direction: column; align-items: center; gap: 15px; bottom: 20px; }
 		.bloom-footer .zen-dots-regular p { font-size: clamp(0.9rem, 2.2vw, 0.9rem); }
-		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.9rem, 2.5vw, 1rem); white-space: normal; }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.6rem, 2.5vw, 1rem); white-space: normal; }
         .bloom-footer svg { width: 28px; height: 28px; }
     }
 
     @media screen and (max-width: 480px) {
         .bloom-footer { gap: 10px; bottom: 15px; }
 		.bloom-footer .zen-dots-regular p { font-size: clamp(0.9rem, 2.2vw, 0.8rem); }
-		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.9rem, 2.5vw, 1rem); }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.6rem, 2.5vw, 1rem); }
         .bloom-footer svg { width: 25px; height: 25px; }
     }
     
