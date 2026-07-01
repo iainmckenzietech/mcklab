@@ -356,22 +356,19 @@
 		pointer-events: none;
 	}
 
-    /* --- RESPONSIVE DESIGN (Unchanged) --- */
-    @media (max-width: 768px) {
-        /* ✅ FIX: Revert to a column layout and adjust spacing for a cleaner mobile look. */
+  /* --- RESPONSIVE DESIGN (Unchanged) --- */
+    @media screen and (max-width: 768px) {
         .bloom-footer { flex-direction: column; align-items: center; gap: 15px; bottom: 20px; }
-        .glitch-button { font-size: 0.9rem; padding: 10px 20px; letter-spacing: 1.5px; }
-        .layer { font-size: 0.9rem; letter-spacing: 1.5px; }
-        .bloom-footer .social-links { gap: 15px; }
+		.bloom-footer .zen-dots-regular p { font-size: clamp(0.9rem, 2.2vw, 0.9rem); }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.9rem, 2.5vw, 1rem); white-space: normal; }
         .bloom-footer svg { width: 28px; height: 28px; }
     }
 
-    @media (max-width: 480px) {
-        /* Further adjustments for very small screens */
+    @media screen and (max-width: 480px) {
         .bloom-footer { gap: 10px; bottom: 15px; }
-        .glitch-button { font-size: 0.8rem; padding: 8px 18px; letter-spacing: 1px; }
-        .layer { font-size: 0.8rem; letter-spacing: 1px; }
-        .bloom-footer .social-links { gap: 12px; }
+		.bloom-footer .zen-dots-regular p { font-size: clamp(0.9rem, 2.2vw, 0.8rem); }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.8rem, 2.5vw, 0.9rem); }
         .bloom-footer svg { width: 25px; height: 25px; }
     }
+    
 </style>

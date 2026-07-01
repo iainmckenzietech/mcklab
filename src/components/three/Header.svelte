@@ -137,4 +137,10 @@
 			opacity: 0;
 		}
 	}
+
+	@media (max-width: 768px) {
+		.header-logo {
+			font-size: clamp(60px, 15vw, 90px);
+		}
+	}
 </style>

@@ -18,7 +18,11 @@
 {#if show && !$isPopupActive}
 <div class="bloom-footer" transition:fade={{ duration: 1500, delay: 700 }}>
     
-  <h1 class="zen-dots-regular"></h1>
+  <div class="zen-dots-regular">
+		<p class="bigger">Digital Nomad | Retro Soul | Future Tinkerer</p>
+		<p>Available for AI experiments & professional tech consulting.</p>
+		<p class="contact-line">Say hello@imckenzie.uk</p>
+  </div>
     <div class="social-links">
 		<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
 			<svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" fill="currentColor"/></svg>
@@ -42,12 +46,6 @@
         --bloom-color: rgba(255, 255, 255, 0.7); 
     }
 
-	/* --- 2. YOUR BASE STYLES (Unchanged) --- */
-	.zen-dots-regular {
-		font-family: "Zen Dots", sans-serif;
-		font-weight: 400;
-		font-style: normal;
-	}
 	.bloom-footer {
 		position: fixed;
 		bottom: 20px;
@@ -64,22 +62,31 @@
 		padding-bottom: 10px;
 	}
 
-    .bloom-header h1 {
-		font-size: 1.2rem;
-		font-weight: 400;
-		margin: 0;
-		line-height: 1.4;
-		text-transform: inherit;
-	}
-
 	.zen-dots-regular {
 		font-family: "Zen Dots", sans-serif;
 		font-weight: 400;
 		font-style: normal;
-        font-size: 1.3rem;
+        font-size: clamp(1rem, 2.5vw, 1.125rem);
+		display: block;
+		line-height: 1.6;
 	}
 
-	.bloom-header a, .bloom-header h1 {
+	.zen-dots-regular p {
+		margin: 0.5em 0;
+		text-shadow: 0 0 7px rgba(0, 0, 0, 0.9);
+	}
+
+	.zen-dots-regular p.bigger {
+		font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+		white-space: nowrap; 
+	}
+
+	.zen-dots-regular p.contact-line {
+		margin-top: 1.2em;
+	}
+
+	.bloom-header a,
+	.bloom-header h1 {
 		color: var(--bloom-color);
 		display: block;
 		transition: filter 0.3s ease, transform 0.3s ease;
@@ -284,7 +291,8 @@
     .glitch-button:disabled .text { text-shadow: none; filter: none; }
 
 	/* --- SOCIAL LINKS & ANIMATIONS (Unchanged) --- */
-	.bloom-footer a, .bloom-footer h1 {
+	.bloom-footer a,
+	.zen-dots-regular p {
 		color: var(--bloom-color);
 		transition: color 0.3s ease, filter 0.3s ease, transform 0.3s ease;
 		filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3))
@@ -297,21 +305,23 @@
 		gap: 20px;
 		margin-top: 5px;
 	}
-
-    /* --- RESPONSIVE DESIGN (Unchanged) --- */
-    @media (max-width: 768px) {
-        .bloom-footer { gap: 25px; bottom: 25px; }
-        .glitch-button { font-size: 0.9rem; padding: 10px 20px; letter-spacing: 1.5px; }
-        .layer { font-size: 0.9rem; letter-spacing: 1.5px; }
-        .bloom-footer .social-links { gap: 15px; }
-        .bloom-footer svg { width: 28px; height: 28px; }
+ @media screen and (max-width: 768px) {
+    :global(.bloom-footer) {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      bottom: 20px;
     }
-
-    @media (max-width: 480px) {
-        .bloom-footer { gap: 15px; bottom: 25px; }
-        .glitch-button { font-size: 0.8rem; padding: 8px 18px; letter-spacing: 1px; }
-        .layer { font-size: 0.8rem; letter-spacing: 1px; }
-        .bloom-footer .social-links { gap: 12px; }
-        .bloom-footer svg { width: 25px; height: 25px; }
+    :global(div.zen-dots-regular) {
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
     }
+    :global(div.zen-dots-regular p.bigger) {
+      font-size: clamp(0.9rem, 2.8vw, 1rem);
+      white-space: normal;
+    }
+    :global(.bloom-footer svg) {
+      width: 28px;
+      height: 28px;
+    }
+  }
 </style>
