@@ -158,10 +158,9 @@ export class FloatingObjectsManager {
             const depthVelocityScale = Math.max(0.3, (Math.abs(zDepth) / 12));
             const mobileVelocityScale = this.isMobile ? 0.6 : 1.0;
 
-            // ✅ NEW: Refine trajectories to be more vertical ("stay in their lane").
-            // Give them a stronger initial vertical push and a much weaker horizontal one.
-			const xVelocity = (Math.random() - 0.5) * 0.002 * depthVelocityScale * mobileVelocityScale; // Even slower horizontal
-            const yVelocity = (Math.random() > 0.5 ? 1 : -1) * (0.004 + Math.random() * 0.008) * depthVelocityScale * mobileVelocityScale; // Even slower vertical
+			const xVelocity = (Math.random() - 0.5) * 0.008 * depthVelocityScale * mobileVelocityScale;
+            const yVelocity = (Math.random() - 0.5) * 0.008 * depthVelocityScale * mobileVelocityScale;
+
 
             this.objects.push({
                 name: config.name,
@@ -556,45 +555,15 @@ export class FloatingObjectsManager {
             const halfWidth = obj.scale.x / 2;
             const halfHeight = obj.scale.y / 2;
 
-            // ✅ NEW: Different boundary logic for astronaut vs. other objects.
-            if (this.objects[i].name === 'Astronaut') {
-                // Keep the astronaut within the center third of the screen.
-                const centralBoundsX = bounds.x / 3;
-                const centralBoundsY = bounds.y / 3;
-                if (obj.position.x + halfWidth > centralBoundsX) obj.velocity.x = -Math.abs(obj.velocity.x);
-                else if (obj.position.x - halfWidth < -centralBoundsX) obj.velocity.x = Math.abs(obj.velocity.x);
-                if (obj.position.y + halfHeight > centralBoundsY) obj.velocity.y = -Math.abs(obj.velocity.y);
-                else if (obj.position.y - halfHeight < -centralBoundsY) obj.velocity.y = Math.abs(obj.velocity.y);
-            } else {
-                // Original robust bounce logic for other objects.
-				// ✅ NEW: Filmstrip edge bouncing for non-astronaut objects
-				if (this.filmstripManager) {
-					// const filmstripDims = this.filmstripManager.getFilmstripDimensions(); // FIXME: This method does not exist on FilmstripManager
-					// const filmstripHalfHeight = filmstripDims.height / 2;
-					// // Predict next position
-					// const nextY = obj.position.y + obj.velocity.y;
-					// // Check for collision with filmstrip's horizontal edges
-					// if (nextY + halfHeight > -filmstripHalfHeight && nextY - halfHeight < filmstripHalfHeight) {
-					// 	// If object is moving towards the filmstrip's bottom edge from above
-					// 	if (obj.velocity.y < 0 && obj.position.y >= filmstripHalfHeight) {
-					// 		obj.velocity.y *= -1.05; // Bounce with a little extra push
-					// 	}
-					// 	// If object is moving towards the filmstrip's top edge from below
-					// 	else if (obj.velocity.y > 0 && obj.position.y <= -filmstripHalfHeight) {
-					// 		obj.velocity.y *= -1.05; // Bounce with a little extra push
-					// 	}
-					// }
-				}
-                if (obj.position.x + halfWidth > bounds.x) {
-                    obj.velocity.x = -Math.abs(obj.velocity.x); // Force inward
-                } else if (obj.position.x - halfWidth < -bounds.x) {
-                    obj.velocity.x = Math.abs(obj.velocity.x); // Force inward
-                }
-                if (obj.position.y + halfHeight > bounds.y) {
-                    obj.velocity.y = -Math.abs(obj.velocity.y); // Force inward
-                } else if (obj.position.y - halfHeight < -bounds.y) {
-                    obj.velocity.y = Math.abs(obj.velocity.y); // Force inward
-                }
+            if (obj.position.x + halfWidth > bounds.x) {
+                obj.velocity.x = -Math.abs(obj.velocity.x); // Force inward
+            } else if (obj.position.x - halfWidth < -bounds.x) {
+                obj.velocity.x = Math.abs(obj.velocity.x); // Force inward
+            }
+            if (obj.position.y + halfHeight > bounds.y) {
+                obj.velocity.y = -Math.abs(obj.velocity.y); // Force inward
+            } else if (obj.position.y - halfHeight < -bounds.y) {
+                obj.velocity.y = Math.abs(obj.velocity.y); // Force inward
             }
 
 			obj.matrix.compose(obj.position.clone().add(parallaxOffset), obj.quaternion, obj.scale);

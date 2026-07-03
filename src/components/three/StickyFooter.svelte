@@ -19,9 +19,9 @@
 <div class="bloom-footer" transition:fade={{ duration: 1500, delay: 700 }}>
     
   <div class="zen-dots-regular">
-		<p class="bigger">Digital Nomad | Retro Soul | Future Tinkerer</p>
-		<p>Available for AI experiments & professional tech consulting.</p>
-		<p class="contact-line">Say hello@imckenzie.uk</p>
+	
+		<p ="bigger">Where Retro Soul meets Future Tech!</p>
+		<p class="contact-line">Let's build something. Need Say hello@imckenzie.uk</p>
   </div>
     <div class="social-links">
 		<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
@@ -305,23 +305,19 @@
 		gap: 20px;
 		margin-top: 5px;
 	}
- @media screen and (max-width: 768px) {
-    :global(.bloom-footer) {
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      bottom: 20px;
+
+    /* --- RESPONSIVE DESIGN (Unchanged) --- */
+    @media screen and (max-width: 768px) {
+        .bloom-footer { flex-direction: column; align-items: center; gap: 15px; bottom: 20px; }
+		.bloom-footer .zen-dots-regular p { font-size: clamp(0.8rem, 2.2vw, 0.9rem); }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.9rem, 2.5vw, 1rem); white-space: normal; }
+        .bloom-footer svg { width: 28px; height: 28px; }
     }
-    :global(div.zen-dots-regular) {
-      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+
+    @media screen and (max-width: 480px) {
+        .bloom-footer { gap: 10px; bottom: 15px; }
+		.bloom-footer .zen-dots-regular p { font-size: clamp(0.7rem, 2.2vw, 0.8rem); }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.8rem, 2.5vw, 0.9rem); }
+        .bloom-footer svg { width: 25px; height: 25px; }
     }
-    :global(div.zen-dots-regular p.bigger) {
-      font-size: clamp(0.9rem, 2.8vw, 1rem);
-      white-space: normal;
-    }
-    :global(.bloom-footer svg) {
-      width: 28px;
-      height: 28px;
-    }
-  }
 </style>

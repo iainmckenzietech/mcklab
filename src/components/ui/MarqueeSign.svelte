@@ -45,7 +45,7 @@
 						text="ENTER SITE" 
 						color="#00ff41"
 						charCount={4}
-						dotRadius={4.1}
+						dotRadius={4.5}
 					/>
 				</div>
 			</div>
@@ -197,7 +197,7 @@ li {
     box-sizing: border-box;
 }
 #top {
-    top: 3px;
+    top: 2px;
 }
 #bottom {
     bottom: 0;
@@ -215,11 +215,18 @@ li {
     box-sizing: border-box;
 }
 #right {
-    right: -0.5px;
+    right: -12.5px;
 }
 #left {
-    left: -1px;
+    left: -13px;
 }
+
+#bottom {
+
+}
+
+
+
 #top li, #bottom li, #right li, #left li {
     margin: 0; 
     flex: 0 0 auto;
