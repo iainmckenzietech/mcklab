@@ -23,9 +23,8 @@
 <div class="bloom-footer" transition:fade={{ duration: 1500, delay: 700 }}>
     
   <div class="zen-dots-regular">
-	<p class="bigger">Digital Nomad | Retro Soul | Future Tinkerer</p>
-	<p>Available for AI experiments & professional tech consulting.</p>
-	<p class="contact-line">Say hello@imckenzie.uk</p>
+		<p ="bigger">Where Retro Soul meets Future Tech!</p>
+		<p class="contact-line">Let's build something. Need Say hello@imckenzie.uk</p>
   </div>
     <div class="social-links">
         <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" aria-label="Follow us on TikTok"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
@@ -360,7 +359,7 @@
     @media screen and (max-width: 768px) {
         .bloom-footer { flex-direction: column; align-items: center; gap: 15px; bottom: 20px; }
 		.bloom-footer .zen-dots-regular p { font-size: clamp(0.9rem, 2.2vw, 0.9rem); }
-		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.7rem, 2.5vw, 1rem); white-space: normal; }
+		.bloom-footer .zen-dots-regular p.bigger { font-size: clamp(0.7aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarem, 2.5vw, 1rem); white-space: normal; }
         .bloom-footer svg { width: 28px; height: 28px; }
     }
 
