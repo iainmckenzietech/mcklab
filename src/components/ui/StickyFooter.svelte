@@ -23,8 +23,8 @@
 <div class="bloom-footer" transition:fade={{ duration: 1500, delay: 700 }}>
     
   <div class="zen-dots-regular">
-		<p ="bigger">Where Retro Soul meets Future Tech</p>
-		<p class="contact-line">Let's build something.Need Say hello@imckenzie.uk</p>
+		<p style="bigger">Where Retro Soul meets Future Tech!</p>
+		<p class="contact-line">Let's build something.</p><p> Say hello@imckenzie.uk</p>
   </div>
     <div class="social-links">
         <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" aria-label="Follow us on TikTok"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
@@ -95,7 +95,7 @@
 		font-style: normal;
 		/* ✅ TWEAK: Increase the minimum font size for better readability on mobile. */
         /* The clamp() function takes (MIN, PREFERRED, MAX). The values were in the wrong order. */
-        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        font-size: clamp(1.5rem, 2.5vw, 1.2rem);
 		/* ✅ FIX: Ensure the container for the <p> tags is a block to stack them vertically. */
 		display: block;
 		line-height: 1.6;
