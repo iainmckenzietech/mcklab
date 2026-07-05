@@ -3,7 +3,7 @@
 	import { onMount, tick } from 'svelte';
 	import Header from '$components/three/Header.svelte';
 	import StickyFooter from '$components/ui/StickyFooter.svelte';
-	import { uiVisible, isPopupActive, phase, ExperiencePhase, audioElements } from '$lib/stores';
+	import { uiVisible, phase, ExperiencePhase, audioElements } from '$lib/stores';
 
 	// --- ESSENTIAL GLOBAL IMPORTS ---
 	import '$lib/config/gsap.config.ts';
@@ -52,7 +52,7 @@
 ></audio>
 
 <div class="ui-container">
-	<Header show={$uiVisible && !$isPopupActive} />
+	<Header show={$uiVisible} />
 </div>
 
 <div class="main-content">
@@ -60,7 +60,7 @@
 </div>
 
 <footer class="site-footer">
-	<StickyFooter show={$uiVisible && !$isPopupActive} />
+	<StickyFooter show={$uiVisible} />
 </footer>
 
 <style>

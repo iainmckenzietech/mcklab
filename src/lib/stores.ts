@@ -1,6 +1,6 @@
 // src/lib/stores.ts
 
-import { writable, type Writable, derived } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 
 // ==================================================================
 // NEW: PHASE MANAGEMENT (The core of the new modular flow)
@@ -79,21 +79,7 @@ export const uiVisible: Writable<boolean> = writable(false);
  */
 export const galleryVisible: Writable<boolean> = writable(false);
 
-/** Popup state for HolographicPlayer. This must be defined before stores that derive from it. */
-export const popupPlayer = writable({
-	isOpen: false,
-	isClosing: false, // ✅ ADD: Add a closing state for smoother transitions.
-	url: '',
-	title: '',
-	style: 'Unknown Style',
-	description: 'System awaiting data input...'
-});
 
-/** Controls if a video/holographic player popup is active (used to block background interaction). */
-export const isPopupActive = derived(
-	popupPlayer,
-	($popupPlayer) => $popupPlayer.isOpen
-);
 
 /** Controls if initial site-wide loading/preloading is complete. */
 export const loadingComplete: Writable<boolean> = writable(false);

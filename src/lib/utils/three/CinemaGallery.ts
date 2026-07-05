@@ -23,9 +23,9 @@ import { FloatingObjectsManager, type FloatingObject } from './FloatingObjectsMa
 import { AssetLoader, type LoadedAssets } from './AssetLoader';
 import { setPerlinTexture } from './materials';
 import { SPROCKET_BLOOM_LAYER } from './layers'; // ✅ ADD: Import the new layer constant
-import { FilmstripManager } from './FilmstripManager';
-import { PerformanceMonitor, type QualityLevel } from './PerformanceMonitor'; // ✅ ADD `popupPlayer` here
-import { activeAudio as activeAudioStore, currentTrack, phase, ExperiencePhase, popupPlayer } from '$lib/stores';
+
+import { PerformanceMonitor, type QualityLevel } from './PerformanceMonitor';
+import { activeAudio as activeAudioStore, currentTrack, phase, ExperiencePhase } from '$lib/stores';
 
 // --- CONSTANTS & LAYERS ---
 const BLOOM_LAYER = 1; // A dedicated layer for objects that should bloom.
@@ -114,7 +114,6 @@ export class CinemaGallery {
 	private frameCounter: number = 0;
 	private qualityLevel: QualityLevel = 'high';
 	private floatingObjects: FloatingObjectsManager | null = null;
-	private filmstripManager: FilmstripManager | null = null;
 
  
 	private starfield: Starfield | null = null;
@@ -123,10 +122,7 @@ export class CinemaGallery {
 	private masterWarpIntensity: number = 0;
 	private mouse: THREE.Vector2 = new THREE.Vector2();
 	
-	private wasHoveringFilmstrip: boolean = false;
-	private hoveredSlideIndex: number | null = null;
-	private clickedSlideIndex: number | null = null; // ✅ ADD: To reliably track click targets.
-	private potentialClickTarget: THREE.Group | null = null;
+
 	private resizePending: boolean = false;
 	private currentWarp: number = 0.0; // For starfield stretching during scroll
 	private interactionsEnabled: boolean = false; // ✅ ADD: Guard for filmstrip interaction
@@ -224,8 +220,6 @@ export class CinemaGallery {
 
 				window.addEventListener('resize', this.resize);
 				window.addEventListener('mousemove', this.onMouseMove);
-				this.canvas.addEventListener('pointerdown', this.handlePointerDown);
-				this.canvas.addEventListener('wheel', this.handleWheel, { passive: false });
 				document.addEventListener('visibilitychange', this.handleVisibilityChange);
 
 				this.cacheSceneObjects();
@@ -288,19 +282,6 @@ export class CinemaGallery {
 	 * @param dim - True to dim the scene, false to restore brightness.
 	 */
 	public dimScene(dim: boolean): void {
-		const duration = 0.8;
-		const ease = 'power2.out';
-
-		// Dim/pause the filmstrip
-		if (this.filmstripManager) {
-			if (dim) {
-				this.filmstripManager.pauseAutoplay();
-			} else {
-				// Resume after a delay when the popup closes
-				this.filmstripManager.resumeAutoplay(1000);
-			}
-		}
-
 		// Dim the nebula and stars
 		this.dimBackground(dim);
 	}
@@ -357,7 +338,7 @@ export class CinemaGallery {
 
 		tl.to(this, {
 			masterWarpIntensity: GALLERY_CONFIG.WARP_INTENSITY,
-			duration: 1.4,
+			duration: 1.5, // Tweak this value to make the animation longer
 			ease: 'power2.inOut',
 			yoyo: true,
 			repeat: 1,
@@ -381,7 +362,7 @@ export class CinemaGallery {
 			phase.set(ExperiencePhase.FILMSTRIP_GALLERY); // ✅ TRIGGER UI FADE-IN
 			this.starfield?.setBrightness(0.3, 1.0, 'power1.in');
 			this.interactionsEnabled = true;
-		}, null, 1.8); // Nebula starts with the filmstrip reveal
+		}, null, 2.5); // Adjust this to match the new duration
 	}
 
 
@@ -403,9 +384,7 @@ export class CinemaGallery {
 		// 2. Remove all event listeners
 		window.removeEventListener('resize', this.resize);
 		window.removeEventListener('mousemove', this.onMouseMove);
-		window.removeEventListener('pointerup', this.handlePointerUp);
-		this.canvas.removeEventListener('wheel', this.handleWheel);
-		this.canvas.removeEventListener('pointerdown', this.handlePointerDown);
+		
 		document.removeEventListener('visibilitychange', this.handleVisibilityChange);
 		this.removeContextHandlers();
 
@@ -605,78 +584,7 @@ export class CinemaGallery {
 	// --- INTERACTION HANDLERS ---
 	// ✅ REFACTORED: Pointer Event Delegation
 	// These handlers now do ONE thing: tell the specialist what happened.
-	private handleWheel = (e: WheelEvent) => {
-		if (!this.interactionsEnabled) return; // ✅ ADD: Interaction guard
-		if (!this.filmstripManager) return;
 	
-		// ✅ FIX: The wheel event is on the canvas, so we can assume any wheel
-		// action is intended for the filmstrip. The raycast was too restrictive and
-		// is the reason scrolling stopped working reliably.
-		e.preventDefault();
-		
-		// Delegate the event directly to the manager.
-		this.filmstripManager.handleWheel(e);
-	};
-	
-	private handlePointerDown = (e: PointerEvent): void => {
-		if (!this.interactionsEnabled || !this.filmstripManager) return;
-
-		// 1. ALWAYS start the drag tracking in the manager
-		this.filmstripManager.handleDragStart(e.clientX, true);
-
-		// 2. Add the listeners to track the drag/release
-		window.addEventListener('pointermove', this.handlePointerMove);
-		window.addEventListener('pointerup', this.handlePointerUp);
-		(e.target as HTMLElement).setPointerCapture(e.pointerId);
-
-		// 3. Check if they happened to click a video for popup purposes
-		const mouse = new THREE.Vector2(
-			(e.clientX / this.canvas.clientWidth) * 2 - 1,
-			-(e.clientY / this.canvas.clientHeight) * 2 + 1
-		);
-		const raycaster = new THREE.Raycaster();
-		raycaster.setFromCamera(mouse, this.camera);
-
-		const intersects = raycaster.intersectObjects(this.filmstripManager.getSlideMeshes(), false);
-
-		if (intersects.length > 0) {
-			// They clicked a slide! Store it as a potential target.
-			this.potentialClickTarget = intersects[0].object.parent as THREE.Group;
-		} else {
-			this.potentialClickTarget = null;
-		}
-	};
-	
-	private handlePointerMove = (e: PointerEvent) => {
-		if (!this.filmstripManager) return;
-		this.filmstripManager.handleDragMove(e.clientX);
-	};
-
-	private handlePointerUp = (e: PointerEvent) => {
-		// Cleanup (keep exactly as before)
-		window.removeEventListener('pointermove', this.handlePointerMove);
-		window.removeEventListener('pointerup', this.handlePointerUp);
-		if ((e.target as HTMLElement).hasPointerCapture(e.pointerId)) {
-			(e.target as HTMLElement).releasePointerCapture(e.pointerId);
-		}
-
-		if (!this.filmstripManager) return;
-
-		const wasClick = this.filmstripManager.isClick;
-
-		this.filmstripManager.handleDragEnd(wasClick);
-
-		// === NEW CLEAN CLICK HANDLING ===
-		if (wasClick && this.potentialClickTarget) {
-			const now = Date.now();
-			if (now - this.lastClickTime > this.clickDebounce) {
-				this.lastClickTime = now;
-				this.filmstripManager.handleSlideClick(this.potentialClickTarget.userData.index);
-			}
-		}
-		
-		this.potentialClickTarget = null; // clean up
-	};
 
 
 	/**
@@ -756,33 +664,7 @@ export class CinemaGallery {
 		const raycaster = new THREE.Raycaster();
 		raycaster.setFromCamera(this.mouse, this.camera);
 	
-		this.camera.userData.hoveredSlideIndex = null;
-	
-		if (!this.filmstripManager) return;
-	
-		this.filmstripManager.update();
-		const slideMeshes = this.filmstripManager.getSlideMeshes() ?? [];
-	
-		if (slideMeshes.length > 0) {
-			const intersects = raycaster.intersectObjects(slideMeshes, false);
-	
-			if (intersects.length > 0) {
-				const hoveredMesh = intersects[0].object as THREE.Mesh;
-				const group = hoveredMesh.parent as THREE.Group;
-	
-				if (group.userData.isGhost) {
-					this.hoveredSlideIndex = null;
-					this.filmstripManager.setHoveredIndex(null);
-				} else {
-					const index = group.userData.index;
-					this.hoveredSlideIndex = index;
-					this.filmstripManager.setHoveredIndex(index);
-				}
-			} else {
-				this.hoveredSlideIndex = null;
-				this.filmstripManager.setHoveredIndex(null);
-			}
-		}
+		
 	};
 
 	public resize() {
@@ -817,9 +699,6 @@ export class CinemaGallery {
 
 				this.nebula?.resize(this.camera); // This will now correctly resize the nebula
 				this.floatingObjects?.resize(this.camera);
-				// this.floatingObjects?.resize(this.camera);
-				this.filmstripManager?.resize();
-				this.filmstripManager?.update(); // Force an update to apply new positions immediately
 
 				this.resizePending = false;
 			});
@@ -861,8 +740,6 @@ export class CinemaGallery {
 
 		// --- STATE & THROTTLING LOGIC ---
 		const isCurrentlyWarping = this.masterWarpIntensity > 0;
-		const isUserInteracting = this.filmstripManager?.isScrolling || this.filmstripManager?.isDragging;
-		const postEffectsEnabled = isCurrentlyWarping || isUserInteracting;
 
 		// --- POST-PROCESSING (Corrected Logic) ---
 		this.bloomPass.enabled = true; // Bloom is almost always on
@@ -884,7 +761,6 @@ export class CinemaGallery {
 		}
 
 		// --- UPDATES (EVERY FRAME) ---
-		this.filmstripManager?.update();
 		this.nebula?.update();
 
 		// --- UPDATES (~30 FPS) ---

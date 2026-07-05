@@ -234,7 +234,7 @@ export function createExitTimeline(dispatch: (type: string, detail?: any) => voi
    
 
     // 5. **Very short stage fade** (no black)
-    exitTl.to('#stage', { opacity: 0, duration: 0.10, ease: 'power2.in' }, 0.25);
+    exitTl.to('#stage', { opacity: 0, duration: 1.2, ease: 'power2.in' }, 0.1);
 
     return exitTl;
 }

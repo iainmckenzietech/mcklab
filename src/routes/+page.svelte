@@ -3,9 +3,9 @@
   import Intro from '$lib/Intro.svelte';
   import { createExitTimeline } from '$lib/utils/Choreographer.ts';
   import UniverseScene from '$components/three/UniverseScene.svelte';
-  import HolographicPlayer from '$components/ui/HolographicPlayer.svelte'; // Corrected path
+  
   import { AudioManager } from '$lib/utils/AudioManager.js';
-  import { galleryVisible, phase, ExperiencePhase, uiVisible, isPopupActive, audioElements, popupPlayer, sceneReady, curtainState } from '$lib/stores.js'; // ✅ FIX: Import curtainState
+  import { galleryVisible, phase, ExperiencePhase, uiVisible, audioElements, sceneReady, curtainState } from '$lib/stores.js'; // ✅ FIX: Import curtainState
   import { get } from 'svelte/store';
   import posts from '$lib/posts.json';
 
@@ -67,29 +67,7 @@
     }
   }
 
-  function openPopup(post: any) {
-		if (!audioManager) return;
-		audioManager.duckMainTrack(true);
-		audioManager.triggerSoundEffect('teleport_sfx', 0.2);
-		popupPlayer.set({
-			isOpen: true,
-			isClosing: false,
-			url: post.media[0].url,
-			title: post.title || 'CLASSIFIED',
-			style: post.style || 'Unknown Style',
-			description: post.description || 'No data available for this entry.'
-		});
-	}
-
-	function closePopup() {
-		if (!audioManager) return;
-		audioManager.duckMainTrack(false);
-		audioManager.triggerSoundEffect('teleport_sfx', 0.2);
-		popupPlayer.update(p => ({ ...p, isClosing: true }));
-		setTimeout(() => {
-			popupPlayer.set({ ...get(popupPlayer), isOpen: false, isClosing: false, url: '' });
-		}, 500); // Match CSS transition duration
-	}
+  
 </script>
 
 <main>
@@ -113,7 +91,7 @@
         titlesContainer={externalTitlesContainer}
         on:ready={() => {}}
         on:warpPeak={handleWarpPeak}
-        on:slideClick={(e) => openPopup(e.detail)}
+        
       />
     {/if}
   </div>
@@ -126,17 +104,7 @@
     <div class="gallery-overlay"></div>
   {/if}
 
-  <!-- Holographic Player Overlay -->
-  {#if $popupPlayer.isOpen}
-    <HolographicPlayer
-      url={$popupPlayer.url}
-      title={$popupPlayer.title}
-      style={$popupPlayer.style}
-      description={$popupPlayer.description}
-      isOpen={$popupPlayer.isOpen}
-      on:close={closePopup}
-    />
-  {/if}
+  
 </main>
 
 <style>
