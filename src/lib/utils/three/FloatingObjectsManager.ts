@@ -550,20 +550,60 @@ export class FloatingObjectsManager {
             }
             obj.quaternion.setFromEuler(rotation);
 
-            // Get the viewport bounds at the object's specific depth for accurate bouncing
+            // ===============================================
+            //  NEW: Gentle Collision Response (Circle-to-Circle)
+            // ===============================================
+            for (let j = i + 1; j < this.objects.length; j++) {
+                const other = this.objects[j];
+                if (!other.hasFadedIn) continue;
+
+                const dx = other.position.x - obj.position.x;
+                const dy = other.position.y - obj.position.y;
+                const distSq = dx * dx + dy * dy;
+
+                const r1 = Math.max(obj.scale.x, obj.scale.y) * 0.5;
+                const r2 = Math.max(other.scale.x, other.scale.y) * 0.5;
+                const minDist = r1 + r2;
+
+                if (distSq < minDist * minDist && distSq > 0.0001) {
+                    const dist = Math.sqrt(distSq);
+                    const nx = dx / dist;
+                    const ny = dy / dist;
+
+                    const overlap = minDist - dist;
+                    const correction = overlap * 0.5;
+                    obj.position.x -= nx * correction;
+                    obj.position.y -= ny * correction;
+                    other.position.x += nx * correction;
+                    other.position.y += ny * correction;
+
+                    const vx = obj.velocity.x - other.velocity.x;
+                    const vy = obj.velocity.y - other.velocity.y;
+                    const impulse = (vx * nx + vy * ny) * 0.6;
+
+                    if (impulse > 0) {
+                        obj.velocity.x -= impulse * nx;
+                        obj.velocity.y -= impulse * ny;
+                        other.velocity.x += impulse * nx;
+                        other.velocity.y += impulse * ny;
+                    }
+                }
+            }
+
+            // --- Boundary Bouncing (Full Screen for ALL objects) ---
             const bounds = getBoundsAtDepth(this.camera, obj.position.z);
             const halfWidth = obj.scale.x / 2;
             const halfHeight = obj.scale.y / 2;
 
             if (obj.position.x + halfWidth > bounds.x) {
-                obj.velocity.x = -Math.abs(obj.velocity.x); // Force inward
+                obj.velocity.x = -Math.abs(obj.velocity.x);
             } else if (obj.position.x - halfWidth < -bounds.x) {
-                obj.velocity.x = Math.abs(obj.velocity.x); // Force inward
+                obj.velocity.x = Math.abs(obj.velocity.x);
             }
             if (obj.position.y + halfHeight > bounds.y) {
-                obj.velocity.y = -Math.abs(obj.velocity.y); // Force inward
+                obj.velocity.y = -Math.abs(obj.velocity.y);
             } else if (obj.position.y - halfHeight < -bounds.y) {
-                obj.velocity.y = Math.abs(obj.velocity.y); // Force inward
+                obj.velocity.y = Math.abs(obj.velocity.y);
             }
 
 			obj.matrix.compose(obj.position.clone().add(parallaxOffset), obj.quaternion, obj.scale);

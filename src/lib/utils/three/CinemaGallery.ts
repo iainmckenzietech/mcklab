@@ -338,7 +338,7 @@ export class CinemaGallery {
 
 		tl.to(this, {
 			masterWarpIntensity: GALLERY_CONFIG.WARP_INTENSITY,
-			duration: 1.5, // Tweak this value to make the animation longer
+			duration: 1.8, // Increased duration for a slower warp effect
 			ease: 'power2.inOut',
 			yoyo: true,
 			repeat: 1,
